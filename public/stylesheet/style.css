@@ -1,0 +1,30 @@
+:root {
+  --bg: #ffedd8;
+  --navbarbg: #f3d5b5;
+  --text: #463f3a;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+
+.navbar {
+    background-color: var(--navbarbg);
+}
+
+.footer {
+    background-color: var(--navbarbg);
+}
+
+
+
+
+
+
+

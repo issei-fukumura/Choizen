@@ -7,6 +7,8 @@ const posts = require('../controllers/posts');
 
 router.get('/',posts.home);
 
+router.get('/index', posts.index);
+
 router.get('/new', posts.newPostForm);
 
 router.get('/:id', posts.showPost);

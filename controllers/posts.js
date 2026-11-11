@@ -1,7 +1,11 @@
 
 
 module.exports.home = (req, res) => {
-    res.render('posts/home');
+    res.render('home');
+};
+
+module.exports.index = (req, res) => {
+    res.render('posts/index');
 };
 
 module.exports.newPostForm = (req, res) => {
