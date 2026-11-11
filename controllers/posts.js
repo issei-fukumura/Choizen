@@ -1,23 +1,43 @@
+const Post = require('../models/post');
 
 
-module.exports.home = (req, res) => {
-    res.render('home');
-};
 
-module.exports.index = (req, res) => {
-    res.render('posts/index');
+module.exports.index = async (req, res) => {
+  const posts = await Post.find({});
+  res.render('posts/index', { posts });
 };
 
 module.exports.newPostForm = (req, res) => {
   res.render('posts/new');
 };
 
-module.exports.showPost = (req, res) => {
-  res.render('posts/show');
+module.exports.showPost = async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  res.render('posts/show', { post });
 }
 
 
-module.exports.editPostForm = (req, res) => {
-  res.render('posts/edit');
-};  
+module.exports.editPostForm = async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  res.render('posts/edit', { post });
+};
+
+module.exports.createPost = async (req, res) => {
+  const newPost = req.body;
+  const post = new Post(newPost);
+  await post.save();
+  res.redirect('/posts');
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

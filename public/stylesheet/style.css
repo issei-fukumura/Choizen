@@ -5,7 +5,7 @@
 }
 
 body {
-  background: var(--bg);
+  /* background: var(--bg); */
   color: var(--text);
   display: flex;
   flex-direction: column;
@@ -21,6 +21,8 @@ body {
 .footer {
     background-color: var(--navbarbg);
 }
+
+
 
 
 

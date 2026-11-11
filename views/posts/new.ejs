@@ -1,8 +1,18 @@
-<% layout('layouts/boilerplate') %> 
+<% layout('layouts/boilerplate') %>
 
 
-<h1>投稿作成</h1>
+    <h1>投稿作成</h1>
 
-
-
-
+    <div class="offset-3 col-6">
+        <form action="/posts" method="POST">
+            <div class="mb-3">
+                <label for="postTitle" class="form-label">タイトル</label>
+                <input type="text" class="form-control" id="postTitle" name="title" placeholder="タイトルを入力してください">
+            </div>
+            <div class="mb-3">
+                <label for="postContent" class="form-label">投稿内容</label>
+                <textarea class="form-control" id="postContent" name="content" rows="3" placeholder="投稿内容を入力してください"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">投稿する</button>
+        </form>
+    </div>
