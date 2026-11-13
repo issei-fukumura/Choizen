@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const ejsMate = require('ejs-mate');
 const path = require('path');
@@ -5,6 +9,10 @@ const postRoutes = require('./routes/posts');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
+
+const cookieParser = require('cookie-parser');
+const createSupabase = require('./utils/supabaseClient');
+
 
 const app = express();
 app.use(methodOverride('_method'));
@@ -25,8 +33,15 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(cookieParser());
+app.use(async (req, res, next) => {
+  req.supabase = createSupabase(req, res);
+  const { data } = await req.supabase.auth.getUser();
+  res.locals.currentUser = data?.user || null;
+  next();
+});
 app.use('/posts',postRoutes);
+
 
 app.get('/', (req, res) => {
     res.render('home');
@@ -37,6 +52,7 @@ app.all('/{*splat}', (req, res, next) => {   // Express 4なら app.all('*', ...
 });
 
 app.use((err, req, res, next) => {
+    console.log(err);
   const { statusCode = 500 } = err;
   if (!err.message) err.message = '問題が発生しました';
   res.status(statusCode).render('error', { err });

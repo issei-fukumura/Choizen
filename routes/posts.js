@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const posts = require('../controllers/posts');
-const {validatePost } = require('../middleware');
+const user = require('../controllers/users');
+const {validatePost,validateUser} = require('../middleware');
 const mongoose = require('mongoose');
 const ExpressError = require('../utils/ExpressError');
 
@@ -18,7 +19,6 @@ router.route('/:id')
      .get(posts.showPost)
      .put(validatePost, posts.updatePost)
      .delete(posts.deletePost);
-
 
 router.get('/:id/edit', posts.editPostForm);
 

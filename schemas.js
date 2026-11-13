@@ -11,3 +11,17 @@ module.exports.postSchema = Joi.object({
     }),
 });
 
+module.exports.userSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    'string.email': 'メールアドレスの形式が正しくありません',
+    'string.empty': 'メールアドレスを入力してください',
+    'any.required': 'メールアドレスは必須です',
+  }),
+  password: Joi.string().min(8).required().messages({
+    'string.min': 'パスワードは8文字以上で入力してください',
+    'string.empty': 'パスワードを入力してください',
+    'any.required': 'パスワードは必須です',
+  }),
+});
+
+
