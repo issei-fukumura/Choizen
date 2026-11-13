@@ -1,24 +1,18 @@
 <% layout('layouts/boilerplate') %>
 
-
     <h1>投稿一覧</h1>
-
     <% if (posts && posts.length> 0) { %>
         <% for(let post of posts) {%>
-            <div class="card mb-1">
-                <div class="mx-6">
+            <div class="card offset-3 col-6 mb-1">
+                <div class="m-2">
                     <%= post.title %>
                 </div>
                 <div class="card-body">
                     <%= post.content %>
                 </div>
-                <a class="btn btn-primary " href="/posts/<%= post._id %>">
-                            <%= post.title %>の詳細
+                <a class="btn btn-primary align-self-start m-1" href="/posts/<%= post._id %>">
+                            投稿の詳細
                 </a>
             </div>
-            <% } %>
-
-
-    <% } else { %>
-        <p>投稿がありません。</p>
+        <% } %>
     <% } %>

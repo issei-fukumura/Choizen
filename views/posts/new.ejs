@@ -2,16 +2,26 @@
 
 
     <h1>投稿作成</h1>
+    
 
     <div class="offset-3 col-6">
-        <form action="/posts" method="POST">
+        <form action="/posts" method="POST" class="validated-form" novalidate>
             <div class="mb-3">
                 <label for="postTitle" class="form-label">タイトル</label>
-                <input type="text" class="form-control" id="postTitle" name="title" placeholder="タイトルを入力してください">
+                <input type="text" class="form-control" id="postTitle" name="title" placeholder="タイトルを入力してください"
+                    required>
+                <div class="valid-feedback">
+                    OK!
+                </div>
             </div>
             <div class="mb-3">
                 <label for="postContent" class="form-label">投稿内容</label>
-                <textarea class="form-control" id="postContent" name="content" rows="3" placeholder="投稿内容を入力してください"></textarea>
+                <textarea class="form-control" id="postContent" name="content" rows="3" maxlength="200" placeholder="投稿内容を入力してください"
+                    required></textarea>
+                <div class="valid-feedback">
+                    OK!
+                </div>
+                 <div class="invalid-feedback">1〜200文字で入力してください</div>
             </div>
             <button type="submit" class="btn btn-primary">投稿する</button>
         </form>
