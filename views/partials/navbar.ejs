@@ -20,13 +20,13 @@
       <ul class="navbar-nav ms-auto">
         <% if (currentUser) { %>
           <li class="nav-item">
-            <form action="/logout" method="POST">
+            <form action="/users/logout" method="POST">
               <button class="btn nav-link">ログアウト</button>
             </form>
           </li>
           <% } else { %>
-            <li class="nav-item"><a class="nav-link" href="/login">ログイン</a></li>
-            <li class="nav-item"><a class="nav-link" href="/register">新規登録</a></li>
+            <li class="nav-item"><a class="nav-link" href="/users/login">ログイン</a></li>
+            <li class="nav-item"><a class="nav-link" href="/users/register">新規登録</a></li>
             <% } %>
       </ul>
 

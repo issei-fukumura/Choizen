@@ -1,4 +1,4 @@
-const { postSchema } = require('./schemas');
+const { postSchema,userSchema} = require('./schemas');
 const ExpressError = require('./utils/ExpressError');
 
 module.exports.validatePost = (req, res, next) => {

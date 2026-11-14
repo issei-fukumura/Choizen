@@ -6,6 +6,7 @@ const express = require('express');
 const ejsMate = require('ejs-mate');
 const path = require('path');
 const postRoutes = require('./routes/posts');
+const userRoutes = require('./routes/users');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
@@ -40,14 +41,16 @@ app.use(async (req, res, next) => {
   res.locals.currentUser = data?.user || null;
   next();
 });
-app.use('/posts',postRoutes);
 
+app.use('/posts',postRoutes);
+app.use('/users',userRoutes);
 
 app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.all('/{*splat}', (req, res, next) => {   // Express 4なら app.all('*', ...)
+app.all('/{*splat}', (req, res, next) => {
+    console.log('404:', req.method, req.originalUrl);
   next(new ExpressError('ページが見つかりません', 404));
 });
 

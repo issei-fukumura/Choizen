@@ -6,8 +6,11 @@ module.exports.loginForm = (req, res) => res.render('users/login');
 module.exports.register = async (req, res) => {
   const { email, password } = req.body;
   const { error } = await req.supabase.auth.signUp({ email, password });
-  if (error) throw new ExpressError('登録できませんでした', 400);
-  res.redirect('/posts');
+//   if (error) throw new ExpressError('登録できませんでした', 400);
+if (error) {
+    throw new ExpressError('登録できませんでした', 400);
+  }
+  res.redirect('/users/posts');
 };
 
 module.exports.login = async (req, res) => {
@@ -19,7 +22,7 @@ module.exports.login = async (req, res) => {
 
 module.exports.logout = async (req, res) => {
   await req.supabase.auth.signOut();
-  res.redirect('/login');
+  res.redirect('/users/login');
 };
 
 
