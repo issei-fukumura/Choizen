@@ -7,7 +7,6 @@ const ejsMate = require('ejs-mate');
 const path = require('path');
 const postRoutes = require('./routes/posts');
 const userRoutes = require('./routes/users');
-const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
 
@@ -17,16 +16,6 @@ const createSupabase = require('./utils/supabaseClient');
 
 const app = express();
 app.use(methodOverride('_method'));
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/Choizen'
-
-mongoose.connect(dbUrl)
-    .then(() => {
-        console.log('MongoDBコネクションOK！！');
-    })
-    .catch(err => {
-        console.log('MongoDBコネクションエラー！！！');
-        console.log(err);
-    });
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
@@ -38,7 +27,8 @@ app.use(cookieParser());
 app.use(async (req, res, next) => {
   req.supabase = createSupabase(req, res);
   const { data } = await req.supabase.auth.getUser();
-  res.locals.currentUser = data?.user || null;
+  req.user = data?.user || null;
+  res.locals.currentUser = req.user;
   next();
 });
 
@@ -55,7 +45,6 @@ app.all('/{*splat}', (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.log(err);
   const { statusCode = 500 } = err;
   if (!err.message) err.message = '問題が発生しました';
   res.status(statusCode).render('error', { err });

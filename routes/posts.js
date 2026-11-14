@@ -1,31 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const posts = require('../controllers/posts');
-const user = require('../controllers/users');
-const {validatePost,validateUser} = require('../middleware');
-const mongoose = require('mongoose');
+const {validatePost, isLoggedIn, isAuthor} = require('../middleware');
 const ExpressError = require('../utils/ExpressError');
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 
 
 
 router.route('/')
     .get(posts.index)
-    .post(validatePost, posts.createPost);
+    .post(isLoggedIn, validatePost, posts.createPost);
 
-router.get('/new', posts.newPostForm);
+router.get('/new',isLoggedIn, posts.newPostForm);
 
 router.route('/:id')
      .get(posts.showPost)
-     .put(validatePost, posts.updatePost)
-     .delete(posts.deletePost);
+     .put(isLoggedIn, isAuthor, validatePost, posts.updatePost)
+     .delete(isLoggedIn, isAuthor, posts.deletePost);
 
-router.get('/:id/edit', posts.editPostForm);
+router.get('/:id/edit', isLoggedIn, isAuthor, posts.editPostForm);
 
+router.post('/:id/like', isLoggedIn, posts.toggleLike);
 
 
 router.param('id', (req, res, next, id) => {
-  if (!mongoose.isValidObjectId(id)) {
+  if (!UUID_RE.test(id)) {
     return next(new ExpressError('投稿が見つかりません', 404));
   }
   next();

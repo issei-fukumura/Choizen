@@ -10,7 +10,7 @@ module.exports.register = async (req, res) => {
 if (error) {
     throw new ExpressError('登録できませんでした', 400);
   }
-  res.redirect('/users/posts');
+  res.redirect('/posts');
 };
 
 module.exports.login = async (req, res) => {

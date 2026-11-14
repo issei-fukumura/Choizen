@@ -5,12 +5,12 @@
         <% for(let post of posts) {%>
             <div class="card offset-3 col-6 mb-1">
                 <div class="m-2">
-                    <%= post.title %>
+                    <%= post.title%>
                 </div>
                 <div class="card-body">
                     <%= post.content %>
                 </div>
-                <a class="btn btn-primary align-self-start m-1" href="/posts/<%= post._id %>">
+                <a class="btn btn-primary align-self-start m-1" href="/posts/<%= post.id %>">
                             投稿の詳細
                 </a>
             </div>

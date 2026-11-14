@@ -13,9 +13,11 @@
         <li class="nav-item">
           <a class="nav-link" href="/posts">投稿一覧</a>
         </li>
+        <% if (currentUser) { %>
         <li class="nav-item">
           <a class="nav-link" href="/posts/new">投稿作成</a>
         </li>
+        <% } %>
       </ul>
       <ul class="navbar-nav ms-auto">
         <% if (currentUser) { %>

@@ -1,20 +1,21 @@
 <% layout('layouts/boilerplate') %>
 
 
-<div class="offset-3 col-6">
-     <h1>
-        <%= post.title %>
-    </h1>
-    <p>本文:<%= post.content %>
-    </p>
-    <a class="btn btn-primary align-self-start m-1" href="/posts/<%= post._id %>/edit">
-        投稿の編集
-    </a>
-    <form action="/posts/<%= post._id %>?_method=DELETE" method="POST">
-        <button type="submit" class="btn btn-danger m-1">投稿の削除</button>
-    </form>
-    <a class="btn btn-primary align-self-start m-1" href="/posts">
-        投稿一覧
-    </a>
-</div>
-   
+    <div class="offset-3 col-6">
+        <h1>
+            <%= post.title %>
+        </h1>
+        <p>本文:<%= post.content %>
+        </p>
+        <% if (currentUser && currentUser.id===post.author_id) { %>
+            <a class="btn btn-primary align-self-start m-1" href="/posts/<%= post.id %>/edit">
+                投稿の編集
+            </a>
+            <form action="/posts/<%= post.id %>?_method=DELETE" method="POST">
+                <button type="submit" class="btn btn-danger m-1">投稿の削除</button>
+            </form>
+        <% } %>
+        <a class="btn btn-primary align-self-start m-1" href="/posts">
+            投稿一覧
+         </a>
+    </div>
