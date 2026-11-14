@@ -1,13 +1,19 @@
-const Post = require('../models/post');
 const ExpressError = require('../utils/ExpressError');
 
 module.exports.index = async (req, res) => {
   const { data: posts, error } = await req.supabase
     .from('posts')
-    .select('*')
+    .select('*, likes(count)')            // 件数を集計して取得
     .order('created_at', { ascending: false });
   if (error) throw new ExpressError('投稿を取得できませんでした', 500);
-  res.render('posts/index', { posts });
+
+  let likedIds = new Set();
+  if (req.user) {
+    const { data: mine } = await req.supabase
+      .from('likes').select('post_id').eq('user_id', req.user.id);
+    likedIds = new Set((mine || []).map(l => l.post_id));
+  }
+  res.render('posts/index', { posts, likedIds });
 };
 
 
@@ -17,10 +23,19 @@ module.exports.newPostForm = (req, res) => {
 
 module.exports.showPost = async (req, res) => {
   const { data: post, error } = await req.supabase
-    .from('posts').select('*').eq('id', req.params.id).maybeSingle();
+    .from('posts').select('*, likes(count)')
+    .eq('id', req.params.id).maybeSingle();
   if (error) throw new ExpressError('投稿を取得できませんでした', 500);
   if (!post) throw new ExpressError('投稿が見つかりません', 404);
-  res.render('posts/show', { post });
+
+  let liked = false;
+  if (req.user) {
+    const { data } = await req.supabase
+      .from('likes').select('post_id')
+      .eq('post_id', post.id).eq('user_id', req.user.id).maybeSingle();
+    liked = !!data;
+  }
+  res.render('posts/show', { post, liked });
 };
 
 module.exports.editPostForm = async (req, res) => {
@@ -42,18 +57,6 @@ module.exports.createPost = async (req, res) => {
 module.exports.updatePost = async (req, res) => {
   const { id } = req.params;
   const { title, content } = req.body;
-  const post = await Post.findByIdAndUpdate(
-    id,
-    { title, content },
-    { runValidators: true } 
-  );
-  if (!post) throw new ExpressError('投稿が見つかりません', 404);
-  res.redirect(`/posts/${id}`);
-};
-
-module.exports.updatePost = async (req, res) => {
-  const { id } = req.params;
-  const { title, content } = req.body;
   const { data, error } = await req.supabase
     .from('posts').update({ title, content }).eq('id', id).select();
   if (error) throw new ExpressError('更新できませんでした', 400);
@@ -61,12 +64,6 @@ module.exports.updatePost = async (req, res) => {
   res.redirect(`/posts/${id}`);
 };
 
-module.exports.deletePost = async (req, res) => {
-  const { id } = req.params;
-  const post = await Post.findByIdAndDelete(id);
-  if (!post) throw new ExpressError('投稿が見つかりません', 404);
-  res.redirect('/posts');
-};
 module.exports.deletePost = async (req, res) => {
   const { id } = req.params;
   const { data, error } = await req.supabase

@@ -11,8 +11,13 @@
                     <%= post.content %>
                 </div>
                 <a class="btn btn-primary align-self-start m-1" href="/posts/<%= post.id %>">
-                            投稿の詳細
+                    投稿の詳細
                 </a>
+                <form action="/posts/<%= post.id %>/like" method="POST" class="d-inline">
+                    <button class="btn btn-sm <%= likedIds.has(post.id) ? 'btn-danger' : 'btn-outline-danger' %>">
+                        ♥ <%= post.likes[0].count %>
+                    </button>
+                </form>
             </div>
-        <% } %>
-    <% } %>
+            <% } %>
+                <% } %>
