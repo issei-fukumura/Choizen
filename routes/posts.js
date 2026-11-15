@@ -6,6 +6,12 @@ const ExpressError = require('../utils/ExpressError');
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 
+router.param('id', (req, res, next, id) => {
+  if (!UUID_RE.test(id)) {
+    return next(new ExpressError('投稿が見つかりません', 404));
+  }
+  next();
+});
 
 
 router.route('/')
@@ -24,12 +30,6 @@ router.get('/:id/edit', isLoggedIn, isAuthor, posts.editPostForm);
 router.post('/:id/like', isLoggedIn, posts.toggleLike);
 
 
-router.param('id', (req, res, next, id) => {
-  if (!UUID_RE.test(id)) {
-    return next(new ExpressError('投稿が見つかりません', 404));
-  }
-  next();
-});
 
 
 

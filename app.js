@@ -40,7 +40,6 @@ app.get('/', (req, res) => {
 });
 
 app.all('/{*splat}', (req, res, next) => {
-    console.log('404:', req.method, req.originalUrl);
   next(new ExpressError('ページが見つかりません', 404));
 });
 
