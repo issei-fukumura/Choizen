@@ -1,15 +1,14 @@
-const { postSchema,userSchema} = require('./schemas');
+const { postSchema, registerSchema, loginSchema, usernameSchema } = require('./schemas');
 const ExpressError = require('./utils/ExpressError');
 
-module.exports.validatePost = (req, res, next) => {
-  const { error, value } = postSchema.validate(req.body, {
+const validate = (schema) => (req, res, next) => {
+  const { error, value } = schema.validate(req.body, {
     stripUnknown: true,
     abortEarly: false,
   });
-if (error) {
-  const msg = error.details.map(d => d.message).join('、');
-  return next(new ExpressError(msg, 400));
-}
+  if (error) {
+    return next(new ExpressError(error.details.map(d => d.message).join('、'), 400));
+  }
   req.body = value;
   next();
 };
@@ -21,14 +20,6 @@ module.exports.isLoggedIn = (req, res, next) => {
 };
 
 module.exports.isAuthor = async (req, res, next) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) return next(new ExpressError('投稿が見つかりません', 404));
-  if (post.authorId !== req.user.id) {
-    return next(new ExpressError('この操作を行う権限がありません', 403));
-  }
-  next();
-};
-module.exports.isAuthor = async (req, res, next) => {
   const { data: post, error } = await req.supabase
     .from('posts').select('author_id').eq('id', req.params.id).maybeSingle();
   if (error) return next(new ExpressError('投稿を取得できませんでした', 500));
@@ -39,17 +30,10 @@ module.exports.isAuthor = async (req, res, next) => {
   next();
 };
 
-module.exports.validateUser = (req, res, next) => {
-  const { error, value } = userSchema.validate(req.body, {
-    stripUnknown: true,
-    abortEarly: false,
-  });
-  if (error) {
-    const msg = error.details.map(d => d.message).join('、');
-    return next(new ExpressError(msg, 400));
-  }
-  req.body = value;
-  next();
-};
+
+module.exports.validatePost = validate(postSchema);
+module.exports.validateRegister = validate(registerSchema);
+module.exports.validateLogin = validate(loginSchema);
+module.exports.validateUsername = validate(usernameSchema);
 
 

@@ -3,21 +3,29 @@
     <h1>投稿一覧</h1>
     <% if (posts && posts.length> 0) { %>
         <% for(let post of posts) {%>
-            <div class="card offset-3 col-6 mb-1">
-                <div class="m-2">
-                    <%= post.title%>
-                </div>
+            <div class="offset-3 col-6 mb-1">
+                <h2><a href="/posts/<%= post.id %>">
+                        <%= post.profiles?.username || '匿名' %>
+                    </a></h2>
                 <div class="card-body">
                     <%= post.content %>
                 </div>
-                <a class="btn btn-primary align-self-start m-1" href="/posts/<%= post.id %>">
-                    投稿の詳細
-                </a>
-                <form action="/posts/<%= post.id %>/like" method="POST" class="d-inline">
-                    <button class="btn btn-sm <%= likedIds.has(post.id) ? 'btn-danger' : 'btn-outline-danger' %>">
-                        ♥ <%= post.likes[0].count %>
-                    </button>
-                </form>
+                <div class="post-foot">
+                    <% if (currentUser) { %>
+                        <form action="/posts/<%= post.id %>/like" method="POST">
+                            <button class="like-btn <%= likedIds.has(post.id) ? 'is-liked' : '' %>" type="submit">
+                                ♥ <%= post.likes[0].count %>
+                            </button>
+                        </form>
+                        <% } else { %>
+                            <span class="meta">♥ <%= post.likes[0].count %></span>
+                            <% } %>
+                                <a class="text-link" href="/posts/<%= post.id %>">詳しく見る</a>
+                </div>
             </div>
             <% } %>
-                <% } %>
+                <% } else { %>
+                    <div class="empty">
+                        <p>まだ投稿がありません。</p>
+                    </div>
+                    <% } %>

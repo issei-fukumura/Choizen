@@ -3,8 +3,9 @@ const ExpressError = require('../utils/ExpressError');
 module.exports.index = async (req, res) => {
   const { data: posts, error } = await req.supabase
     .from('posts')
-    .select('*, likes(count)')            // 件数を集計して取得
+    .select('*, likes(count), profiles(username)')
     .order('created_at', { ascending: false });
+    console.error('posts error:', error); 
   if (error) throw new ExpressError('投稿を取得できませんでした', 500);
 
   let likedIds = new Set();
@@ -17,13 +18,14 @@ module.exports.index = async (req, res) => {
 };
 
 
+
 module.exports.newPostForm = (req, res) => {
   res.render('posts/new');
 };
 
 module.exports.showPost = async (req, res) => {
   const { data: post, error } = await req.supabase
-    .from('posts').select('*, likes(count)')
+    .from('posts').select('*, likes(count), profiles(username)')
     .eq('id', req.params.id).maybeSingle();
   if (error) throw new ExpressError('投稿を取得できませんでした', 500);
   if (!post) throw new ExpressError('投稿が見つかりません', 404);
@@ -47,18 +49,18 @@ module.exports.editPostForm = async (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
-  const { title, content } = req.body;
+  const { content } = req.body;
   // author_id は DB の default auth.uid() が入れる
-  const { error } = await req.supabase.from('posts').insert({ title, content });
+  const { error } = await req.supabase.from('posts').insert({ content });
   if (error) throw new ExpressError('投稿できませんでした', 400);
   res.redirect('/posts');
 };
 
 module.exports.updatePost = async (req, res) => {
   const { id } = req.params;
-  const { title, content } = req.body;
+  const { content } = req.body;
   const { data, error } = await req.supabase
-    .from('posts').update({ title, content }).eq('id', id).select();
+    .from('posts').update({ content }).eq('id', id).select();
   if (error) throw new ExpressError('更新できませんでした', 400);
   if (!data.length) throw new ExpressError('投稿が見つかりません', 404);
   res.redirect(`/posts/${id}`);

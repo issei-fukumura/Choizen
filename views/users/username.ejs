@@ -1,0 +1,16 @@
+<% layout('layouts/boilerplate') %>
+<div class="card">
+    <p class="kicker">WELCOME</p>
+    <h1>ユーザー名を決めよう</h1>
+    <p class="lede">あとから変更できます。スキップするとランダムな名前になります。</p>
+
+    <form action="/users/username" method="POST" class="validated-form mt-4" novalidate>
+        <div class="mb-4">
+            <label for="username" class="form-label">ユーザー名（任意）</label>
+            <input type="text" class="form-control" id="username" name="username"
+                maxlength="20" placeholder="20文字以内">
+        </div>
+        <button type="submit" class="btn-accent">決定</button>
+        <a class="text-link ms-3" href="/posts">スキップ</a>
+    </form>
+</div>

@@ -1,15 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const user = require('../controllers/users');
-const { validateUser } = require('../middleware');
+const { validateRegister, validateLogin, validateUsername, isLoggedIn } = require('../middleware');
 
 router.route('/register')
   .get(user.registerForm)
-  .post(validateUser, user.register);
+  .post(validateRegister, user.register);
 
 router.route('/login')
   .get(user.loginForm)
-  .post(validateUser, user.login);
+  .post(validateLogin, user.login);
+
+router.route('/username')
+  .get(isLoggedIn, user.usernameForm)
+  .post(isLoggedIn, validateUsername, user.setUsername);  
 
 router.post('/logout', user.logout);
 
